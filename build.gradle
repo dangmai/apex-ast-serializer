@@ -135,16 +135,19 @@ generateTypeScript {
   ]
   classPatterns = [
     'apex.jorje.data.**',
+    'apex.jorje.parser.impl.HiddenToken**',
   ]
   excludeClassPatterns = [
     'apex.jorje.**$MatchBlock',
     'apex.jorje.**$MatchBlockWithDefault',
     'apex.jorje.**$SwitchBlock',
-    'apex.jorje.**$SwitchBlockWithDefault'
+    'apex.jorje.**$SwitchBlockWithDefault',
+    'apex.jorje.**$Visitor',
+    'apex.jorje.**Factory',
   ]
   customTypeNaming = [
     'apex.jorje.data.ast.Expr$LiteralExpr:ExprLiteralExpr',
-    'apex.jorje.data.soql.QueryExpr$LiteralExpr:QueryExprLiteralExpr'
+    'apex.jorje.data.soql.QueryExpr$LiteralExpr:QueryExprLiteralExpr',
   ]
   optionalProperties = OptionalProperties.all
   outputFile = 'build/typings/jorje.d.ts'

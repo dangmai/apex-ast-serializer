@@ -48,10 +48,12 @@ public class CustomTypingGenerator extends Extension {
         Boolean isAbstract = Modifier.isAbstract(originClass.getModifiers());
 
         if (isInterface || isAbstract) {
-            allProperties.add(new TsPropertyModel("@class", TsType.String, TsModifierFlags.None, true, null));
+            allProperties.add(new TsPropertyModel("@class", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
         } else {
             allProperties.add(new TsPropertyModel("@class", new TsType.StringLiteralType(bean.getOrigin().getName()), TsModifierFlags.None, true, null));
         }
+        allProperties.add(new TsPropertyModel("@id", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
+        allProperties.add(new TsPropertyModel("@reference", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
         return bean
             .withProperties(allProperties);
     }
