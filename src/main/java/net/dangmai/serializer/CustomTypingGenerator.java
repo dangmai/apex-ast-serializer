@@ -40,10 +40,12 @@ public class CustomTypingGenerator extends Extension {
 
     private TsBeanModel addCustomProperties(TsBeanModel bean) {
         Class originClass = bean.getOrigin();
-        if (!originClass.getName().startsWith("apex")) {
+        List<TsPropertyModel> allProperties = bean.getProperties();
+        allProperties.add(new TsPropertyModel("@id", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
+        allProperties.add(new TsPropertyModel("@reference", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
+        if (!originClass.getName().startsWith("apex.jorje")) {
             return bean;
         }
-        List<TsPropertyModel> allProperties = bean.getProperties();
         Boolean isInterface = bean.getOrigin().isInterface();
         Boolean isAbstract = Modifier.isAbstract(originClass.getModifiers());
 
@@ -52,8 +54,6 @@ public class CustomTypingGenerator extends Extension {
         } else {
             allProperties.add(new TsPropertyModel("@class", new TsType.StringLiteralType(bean.getOrigin().getName()), TsModifierFlags.None, true, null));
         }
-        allProperties.add(new TsPropertyModel("@id", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
-        allProperties.add(new TsPropertyModel("@reference", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
         return bean
             .withProperties(allProperties);
     }
