@@ -4,8 +4,10 @@ import cz.habarta.typescript.generator.Extension;
 import cz.habarta.typescript.generator.TsType;
 import cz.habarta.typescript.generator.compiler.ModelCompiler;
 import cz.habarta.typescript.generator.compiler.ModelTransformer;
-import cz.habarta.typescript.generator.compiler.SymbolTable;
-import cz.habarta.typescript.generator.emitter.*;
+import cz.habarta.typescript.generator.emitter.EmitterExtensionFeatures;
+import cz.habarta.typescript.generator.emitter.TsBeanModel;
+import cz.habarta.typescript.generator.emitter.TsModifierFlags;
+import cz.habarta.typescript.generator.emitter.TsPropertyModel;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
