@@ -1,4 +1,4 @@
-package net.dangmai.serializer;
+package net.dangmai.types;
 
 import cz.habarta.typescript.generator.Extension;
 import cz.habarta.typescript.generator.TsType;
@@ -16,30 +16,27 @@ import java.util.stream.Collectors;
  * This class is used to customize the Typescript type generations from jorje
  * Java classes.
  */
-public class CustomTypingGenerator extends Extension {
+public class CustomTypeGeneratorExtension extends Extension {
     @Override
     public EmitterExtensionFeatures getFeatures() {
-        final EmitterExtensionFeatures features = new EmitterExtensionFeatures();
-        return features;
+        return new EmitterExtensionFeatures();
     }
 
     @Override
     public List<TransformerDefinition> getTransformers() {
         return Arrays.asList(
-            new TransformerDefinition(ModelCompiler.TransformationPhase.BeforeSymbolResolution, new ModelTransformer() {
-                @Override
-                public TsModel transformModel(SymbolTable symbolTable, TsModel model) {
-                    return model.withBeans(model.getBeans().stream()
-                        .map(CustomTypingGenerator.this::addCustomProperties)
+            new TransformerDefinition(
+                ModelCompiler.TransformationPhase.BeforeSymbolResolution,
+                (ModelTransformer) (symbolTable, model) -> model.withBeans(
+                    model.getBeans().stream()
+                        .map(CustomTypeGeneratorExtension.this::addCustomProperties)
                         .collect(Collectors.toList())
-                    );
-                }
-            })
+            ))
         );
     }
 
     private TsBeanModel addCustomProperties(TsBeanModel bean) {
-        Class originClass = bean.getOrigin();
+        Class<?> originClass = bean.getOrigin();
         List<TsPropertyModel> allProperties = bean.getProperties();
         allProperties.add(new TsPropertyModel("@id", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
         allProperties.add(new TsPropertyModel("@reference", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
@@ -57,5 +54,4 @@ public class CustomTypingGenerator extends Extension {
         return bean
             .withProperties(allProperties);
     }
-
 }

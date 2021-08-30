@@ -147,10 +147,11 @@ generateTypeScript {
     'apex.jorje.data.ast.Expr$LiteralExpr:ExprLiteralExpr',
     'apex.jorje.data.soql.QueryExpr$LiteralExpr:QueryExprLiteralExpr',
   ]
+  customTypeProcessor = 'net.dangmai.types.CustomTypeProcessor'
   outputFile = 'build/typings/jorje.d.ts'
   outputKind = 'module'
   extensionClasses = [
-    'net.dangmai.serializer.CustomTypingGenerator'
+    'net.dangmai.types.CustomTypeGeneratorExtension'
   ]
 }
 
