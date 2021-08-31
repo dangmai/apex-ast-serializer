@@ -142,6 +142,7 @@ generateTypeScript {
     'apex.jorje.**$SwitchBlockWithDefault',
     'apex.jorje.**$Visitor',
     'apex.jorje.**Factory',
+    'apex.jorje.**Decorator',
   ]
   customTypeNaming = [
     'apex.jorje.data.ast.Expr$LiteralExpr:ExprLiteralExpr',
@@ -151,7 +152,9 @@ generateTypeScript {
   outputFile = 'build/typings/jorje.d.ts'
   outputKind = 'module'
   extensionClasses = [
-    'net.dangmai.types.CustomTypeGeneratorExtension'
+    'net.dangmai.types.UnionTypeExtension',
+    'net.dangmai.types.CustomFieldExtension',
   ]
+  sortDeclarations = true
 }
 

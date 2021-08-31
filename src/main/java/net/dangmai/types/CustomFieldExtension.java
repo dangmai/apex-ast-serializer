@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class is used to customize the Typescript type generations from jorje
- * Java classes.
+ * This class is used to add custom properties to the generated types
  */
-public class CustomTypeGeneratorExtension extends Extension {
+public class CustomFieldExtension extends Extension {
     @Override
     public EmitterExtensionFeatures getFeatures() {
         return new EmitterExtensionFeatures();
@@ -31,7 +30,7 @@ public class CustomTypeGeneratorExtension extends Extension {
                 ModelCompiler.TransformationPhase.BeforeSymbolResolution,
                 (ModelTransformer) (symbolTable, model) -> model.withBeans(
                     model.getBeans().stream()
-                        .map(CustomTypeGeneratorExtension.this::addCustomProperties)
+                        .map(CustomFieldExtension.this::addCustomProperties)
                         .collect(Collectors.toList())
             ))
         );
@@ -40,20 +39,36 @@ public class CustomTypeGeneratorExtension extends Extension {
     private TsBeanModel addCustomProperties(TsBeanModel bean) {
         Class<?> originClass = bean.getOrigin();
         List<TsPropertyModel> allProperties = bean.getProperties();
-        allProperties.add(new TsPropertyModel("@id", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
-        allProperties.add(new TsPropertyModel("@reference", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
         if (!originClass.getName().startsWith("apex.jorje")) {
             return bean;
         }
-        Boolean isInterface = bean.getOrigin().isInterface();
-        Boolean isAbstract = Modifier.isAbstract(originClass.getModifiers());
+        boolean isInterface = bean.getOrigin().isInterface();
+        boolean isAbstract = Modifier.isAbstract(originClass.getModifiers());
 
-        if (isInterface || isAbstract) {
-            allProperties.add(new TsPropertyModel("@class", new TsType.OptionalType(TsType.String), TsModifierFlags.None, true, null));
-        } else {
-            allProperties.add(new TsPropertyModel("@class", new TsType.StringLiteralType(bean.getOrigin().getName()), TsModifierFlags.None, true, null));
+        if (!isInterface && !isAbstract) {
+            if (!bean.getDiscriminantProperty().equals("@class")) {
+                // This property could already have been populated by the
+                // union extension, so we will forego it in those cases
+                allProperties.add(new TsPropertyModel(
+                    "@class",
+                    new TsType.StringLiteralType(bean.getOrigin().getName()),
+                    TsModifierFlags.None,
+                    true,
+                    null));
+            }
+            allProperties.add(new TsPropertyModel(
+                "@id",
+                new TsType.OptionalType(TsType.String),
+                TsModifierFlags.None,
+                true,
+                null));
+            allProperties.add(new TsPropertyModel(
+                "@reference",
+                new TsType.OptionalType(TsType.String),
+                TsModifierFlags.None,
+                true,
+                null));
         }
-        return bean
-            .withProperties(allProperties);
+        return bean.withProperties(allProperties);
     }
 }
