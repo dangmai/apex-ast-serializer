@@ -36,8 +36,20 @@ public class CustomEnumExtension extends Extension {
         );
     }
 
+    private static TsType generateCustomEnumType(TsType tsType, Map<Symbol, TsEnumModel> enumSymbolTargetMap) {
+       return new TsType.ObjectType(
+           new TsProperty("$", tsType),
+           new TsProperty(
+               "@class",
+               new TsType.StringLiteralType(
+                   enumSymbolTargetMap.get(((TsType.ReferenceType) tsType).symbol).getOrigin().getName()
+               )
+           )
+       );
+    }
+
     private TsModel transformEnums(TsModel tsModel) {
-        final List<TsEnumModel> stringEnums = tsModel.getEnums(EnumKind.StringBased);
+        final List<TsEnumModel> stringEnums = tsModel.getEnums();
         final List<Symbol> enumSymbols = stringEnums
             .stream()
             .map(TsDeclarationModel::getName)
@@ -51,15 +63,16 @@ public class CustomEnumExtension extends Extension {
                 .stream()
                 .map(property -> {
                     if (property.tsType instanceof TsType.ReferenceType && enumSymbols.contains(((TsType.ReferenceType) property.tsType).symbol)) {
-                        property = property.withTsType(new TsType.ObjectType(
-                            new TsProperty("$", property.tsType),
-                            new TsProperty(
-                                "@class",
-                                new TsType.StringLiteralType(
-                                    enumSymbolTargetMap.get(((TsType.ReferenceType) property.tsType).symbol).getOrigin().getName()
-                                )
-                            )
-                        ));
+                        property = property.withTsType(generateCustomEnumType(property.tsType, enumSymbolTargetMap));
+                    } else if (
+                        property.tsType instanceof TsType.BasicArrayType &&
+                        ((TsType.BasicArrayType) property.tsType).elementType instanceof TsType.ReferenceType &&
+                        enumSymbols.contains(((TsType.ReferenceType)((TsType.BasicArrayType) property.tsType).elementType).symbol)
+                    ) {
+                        property = property.withTsType(new TsType.BasicArrayType(
+                            generateCustomEnumType(
+                                ((TsType.BasicArrayType) property.tsType).elementType,
+                                enumSymbolTargetMap)));
                     }
                     return property;
                 })
