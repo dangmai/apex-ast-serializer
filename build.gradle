@@ -152,8 +152,9 @@ generateTypeScript {
   outputFile = 'build/typings/jorje.d.ts'
   outputKind = 'module'
   extensionClasses = [
-    'net.dangmai.types.UnionTypeExtension',
+    'net.dangmai.types.CustomEnumExtension',
     'net.dangmai.types.CustomFieldExtension',
+    'net.dangmai.types.UnionTypeExtension',
   ]
   sortDeclarations = true
 }

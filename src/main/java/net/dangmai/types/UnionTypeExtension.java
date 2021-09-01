@@ -30,12 +30,12 @@ public class UnionTypeExtension extends Extension {
         return Arrays.asList(
             new Extension.TransformerDefinition(
                 ModelCompiler.TransformationPhase.BeforeTsModel,
-                new CustomModelTransformer()
+                new UnionTypeModelTransformer()
             )
         );
     }
 
-    public static class CustomModelTransformer implements ModelTransformer {
+    public static class UnionTypeModelTransformer implements ModelTransformer {
         @Override
         public TsModel transformModel(SymbolTable symbolTable, TsModel model) {
             return model;
