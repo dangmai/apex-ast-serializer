@@ -3,7 +3,6 @@ package net.dangmai.types;
 import cz.habarta.typescript.generator.Extension;
 import cz.habarta.typescript.generator.TsProperty;
 import cz.habarta.typescript.generator.TsType;
-import cz.habarta.typescript.generator.compiler.EnumKind;
 import cz.habarta.typescript.generator.compiler.ModelCompiler;
 import cz.habarta.typescript.generator.compiler.ModelTransformer;
 import cz.habarta.typescript.generator.compiler.Symbol;

@@ -155,6 +155,7 @@ generateTypeScript {
     'net.dangmai.types.CustomEnumExtension',
     'net.dangmai.types.CustomFieldExtension',
     'net.dangmai.types.UnionTypeExtension',
+    'net.dangmai.types.GenericNodeExtension',
   ]
   sortDeclarations = true
 }
