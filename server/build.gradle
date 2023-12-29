@@ -104,7 +104,7 @@ jar {
 }
 
 ext {
-  slf4jVersion = '2.0.9'
+  slf4jVersion = '2.0.10'
   jettyVersion = '11.0.19'
   jerseyVersion = '3.1.3'
 }
